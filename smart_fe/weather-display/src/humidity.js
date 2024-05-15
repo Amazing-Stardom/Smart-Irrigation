@@ -7,20 +7,23 @@ const Gauge = ({ id, title, min, max }) => {
   const gaugeRef = useRef(null);
 
   useEffect(() => {
-    const gauge = new JustGage({
-      id,
-      value: 0,
-      min,
-      max,
-      title,
-    });
+    if (!gaugeRef.current) {
+      gaugeRef.current = new JustGage({
+        id,
+        value: 0,
+        min,
+        max,
+        title,
+      });
+    }
 
     const updateGauge = () => {
       const value = Math.random() * (max - min) + min;
-      gauge.refresh(value);
+      gaugeRef.current.refresh(value);
     };
 
     const intervalId = setInterval(updateGauge, 5000);
+
     return () => clearInterval(intervalId);
   }, [id, min, max, title]);
 
@@ -30,7 +33,7 @@ const Gauge = ({ id, title, min, max }) => {
 function App() {
   return (
     <div className="App">
-      <h1>Environmental Data Dashboard</h1>
+      <h1 className="heading">Environmental Data Dashboard</h1>
       <div className="gauge-container">
         <div className="gauge">
           <h2>Temperature Level</h2>
@@ -42,12 +45,12 @@ function App() {
           />
         </div>
         <div className="gauge">
-          <h2>Soil Moisture Level</h2>
-          <Gauge id="moisture-gauge" title="Moisture (%)" min={0} max={100} />
-        </div>
-        <div className="gauge">
           <h2>Humidity Level</h2>
           <Gauge id="humidity-gauge" title="Humidity (%)" min={0} max={100} />
+        </div>
+        <div className="gauge">
+          <h2>Soil Moisture Level</h2>
+          <Gauge id="moisture-gauge" title="Moisture (%)" min={0} max={100} />
         </div>
       </div>
     </div>

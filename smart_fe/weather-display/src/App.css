@@ -6,11 +6,12 @@ body {
   justify-content: center;
   height: 100vh;
   margin: 0;
-  background-color: #f4f4f4;
+  background-color: blanchedalmond;
 }
 
 .App {
   text-align: center;
+  margin-bottom: 10%;
 }
 
 .gauge-container {
@@ -18,14 +19,35 @@ body {
   justify-content: space-around;
   width: 80%;
   margin-bottom: 20px;
+  gap: 25%;
+  margin-top: 20%;
 }
 
 .gauge {
   width: 30%;
   min-width: 200px;
   text-align: center;
+  gap: 10%;
 }
 
 .gauge h2 {
   margin-bottom: 10px;
+}
+@media screen and (min-width: 321px) {
+  .App {
+    text-align: center;
+    margin-bottom: 1%;
+  }
+  .heading {
+    margin-top: 40%;
+  }
+  .gauge-container {
+    display: flex;
+    flex-direction: column;
+    width: 80%;
+    margin-bottom: 20px;
+    gap: 25%;
+    margin-top: 20%;
+    margin-left: 23%;
+  }
 }
