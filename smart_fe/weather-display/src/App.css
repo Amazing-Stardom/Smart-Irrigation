@@ -1,4 +1,4 @@
-body {
+/* body {
   font-family: Arial, sans-serif;
   display: flex;
   flex-direction: column;
@@ -49,5 +49,46 @@ body {
     gap: 25%;
     margin-top: 20%;
     margin-left: 23%;
+  }
+} */
+
+.gauge {
+  margin: 20px;
+}
+
+.gauge-title {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.icon {
+  margin-right: 10px;
+  font-size: 1.5em;
+}
+
+.gauge-container {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+}
+
+.App h1 {
+  text-align: center;
+}
+
+@media screen and (max-width: 425px) {
+  .App {
+    text-align: center;
+    margin-bottom: 1%;
+  }
+  .heading {
+    margin-top: 40%;
+  }
+  .gauge-container {
+    display: flex;
+    flex-direction: column;
+
+    margin-left: 1%;
   }
 }
