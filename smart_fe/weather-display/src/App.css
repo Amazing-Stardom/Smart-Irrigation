@@ -73,7 +73,7 @@
   flex-wrap: wrap;
 }
 
-.App h1 {
+.App .heading {
   text-align: center;
 }
 

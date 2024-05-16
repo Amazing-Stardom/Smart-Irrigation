@@ -301,7 +301,96 @@
 
 // export default App;
 
-import React, { useEffect, useRef } from "react";
+// import React, { useEffect, useRef } from "react";
+// import JustGage from "justgage";
+// import "raphael";
+// import "./App.css";
+// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+// import {
+//   faThermometerHalf,
+//   faTint,
+//   faWater,
+//   faCloudRain,
+// } from "@fortawesome/free-solid-svg-icons";
+
+// const Gauge = ({ id, title, min, max, icon }) => {
+//   const gaugeRef = useRef(null);
+
+//   useEffect(() => {
+//     // Ensure that the gauge is only initialized once
+//     if (!gaugeRef.current) {
+//       gaugeRef.current = new JustGage({
+//         id,
+//         value: 0,
+//         min,
+//         max,
+//         title,
+//       });
+//     }
+
+//     const updateGauge = () => {
+//       const value = Math.random() * (max - min) + min;
+//       gaugeRef.current.refresh(value);
+//     };
+
+//     const intervalId = setInterval(updateGauge, 5000);
+
+//     // Clean up the interval on component unmount
+//     return () => clearInterval(intervalId);
+//   }, [id, min, max, title]);
+
+//   return (
+//     <div className="gauge">
+//       <div className="gauge-title">
+//         <FontAwesomeIcon icon={icon} className="icon" />
+//         <span>{title}</span>
+//       </div>
+//       <div id={id} className="gauge"></div>
+//     </div>
+//   );
+// };
+
+// function App() {
+//   return (
+//     <div className="App">
+//       <h1 className="heading">Environmental Data Dashboard</h1>
+//       <div className="gauge-container">
+//         <Gauge
+//           id="temperature-gauge"
+//           title="Temperature (°C)"
+//           min={-20}
+//           max={50}
+//           icon={faThermometerHalf}
+//         />
+//         <Gauge
+//           id="moisture-gauge"
+//           title="Moisture (%)"
+//           min={0}
+//           max={100}
+//           icon={faTint}
+//         />
+//         <Gauge
+//           id="humidity-gauge"
+//           title="Humidity (%)"
+//           min={0}
+//           max={100}
+//           icon={faWater}
+//         />
+//         <Gauge
+//           id="rain-gauge"
+//           title="Rainfall (mm)"
+//           min={0}
+//           max={200}
+//           icon={faCloudRain}
+//         />
+//       </div>
+//     </div>
+//   );
+// }
+
+// export default App;
+
+import React, { useEffect, useRef, useState } from "react";
 import JustGage from "justgage";
 import "raphael";
 import "./App.css";
@@ -310,33 +399,26 @@ import {
   faThermometerHalf,
   faTint,
   faWater,
+  faCloudRain,
 } from "@fortawesome/free-solid-svg-icons";
 
-const Gauge = ({ id, title, min, max, icon }) => {
+const Gauge = ({ id, title, min, max, icon, value }) => {
   const gaugeRef = useRef(null);
 
   useEffect(() => {
-    // Ensure that the gauge is only initialized once
+    // Initialize the gauge
     if (!gaugeRef.current) {
       gaugeRef.current = new JustGage({
         id,
-        value: 0,
+        value: value || 0,
         min,
         max,
         title,
       });
-    }
-
-    const updateGauge = () => {
-      const value = Math.random() * (max - min) + min;
+    } else {
       gaugeRef.current.refresh(value);
-    };
-
-    const intervalId = setInterval(updateGauge, 5000);
-
-    // Clean up the interval on component unmount
-    return () => clearInterval(intervalId);
-  }, [id, min, max, title]);
+    }
+  }, [id, min, max, title, value]);
 
   return (
     <div className="gauge">
@@ -350,9 +432,38 @@ const Gauge = ({ id, title, min, max, icon }) => {
 };
 
 function App() {
+  const [weatherData, setWeatherData] = useState({
+    temperature: 0,
+    humidity: 0,
+    rain: 0,
+    moisture: 0,
+  });
+
+  useEffect(() => {
+    // Fetch data from the backend
+    const fetchData = async () => {
+      try {
+        const response = await fetch("http://localhost:8080/weather-data");
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        const data = await response.json();
+        const weather = data[0]; // Assuming the response is an array with one element
+        setWeatherData(weather);
+      } catch (error) {
+        console.error("Error fetching weather data:", error);
+      }
+    };
+
+    fetchData();
+    const intervalId = setInterval(fetchData, 5000); // Update every 5 seconds
+
+    return () => clearInterval(intervalId); // Cleanup on component unmount
+  }, []);
+
   return (
     <div className="App">
-      <h1 className="heading"> Environmental Data Dashboard</h1>
+      <h1 className="heading">Environmental Data Dashboard</h1>
       <div className="gauge-container">
         <Gauge
           id="temperature-gauge"
@@ -360,6 +471,7 @@ function App() {
           min={-20}
           max={50}
           icon={faThermometerHalf}
+          value={weatherData.temperature}
         />
         <Gauge
           id="moisture-gauge"
@@ -367,6 +479,7 @@ function App() {
           min={0}
           max={100}
           icon={faTint}
+          value={weatherData.moisture}
         />
         <Gauge
           id="humidity-gauge"
@@ -374,6 +487,15 @@ function App() {
           min={0}
           max={100}
           icon={faWater}
+          value={weatherData.humidity}
+        />
+        <Gauge
+          id="rain-gauge"
+          title="Rainfall (mm)"
+          min={0}
+          max={200}
+          icon={faCloudRain}
+          value={weatherData.rain}
         />
       </div>
     </div>
