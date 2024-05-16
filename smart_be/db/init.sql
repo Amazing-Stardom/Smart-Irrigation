@@ -1,0 +1,7 @@
+CREATE TABLE IF NOT EXISTS weather_data (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    temperature FLOAT NOT NULL,
+    humidity INTEGER NOT NULL,
+    rain INTEGER NOT NULL,
+    moisture INTEGER NOT NULL
+);
